@@ -1,0 +1,21 @@
+{
+  "name": "lightfield-platform",
+  "private": true,
+  "type": "module",
+  "workspaces": ["packages/shared", "server", "services/web"],
+  "scripts": {
+    "dev": "concurrently -k -n server,web -c green,cyan \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "npm run dev -w @lightfield/server",
+    "dev:web": "npm run dev -w @lightfield/web",
+    "build": "npm run build -w @lightfield/web && npm run build -w @lightfield/server",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p services/web/tsconfig.json && tsc --noEmit -p server/tsconfig.json",
+    "check": "npm test && npm run typecheck && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "concurrently": "^9.1.2",
+    "typescript": "~5.7.3",
+    "vitest": "^3.0.8"
+  }
+}

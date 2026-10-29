@@ -12,7 +12,7 @@ The Optional Homework / Sandbox: Call it "Field Testing" ("Grab a free API key a
 Below is a complete, production-ready `project-plan.md` you can drop directly into the root of your repository. It frames your tool as a reusable **Enterprise Interactive Training & Knowledge Exchange Engine** that scales from 10-minute lightning talks to 2-hour workshops, complete with the JSON session recorder/replayer dropdown and the pilot **HKU AI Lunch Rotator** module.
 
 ```markdown
-# Project Plan: PulseDeck — Interactive Enterprise AI Training & Knowledge Exchange Platform
+# Project Plan: Lightfield — Interactive Enterprise AI Training & Knowledge Exchange Platform
 
 ## 1. Executive Summary & Vision
 **PulseDeck** is a lightweight, zero-login, real-time interactive training platform built with **Node.js, TypeScript, Vite, and Vue 3**. Designed for cross-functional enterprise IT teams (spanning non-coding UI designers, user support specialists, middle managers, and software engineers), it unifies live presentation slides, real-time polls (Mentimeter-style), speed quizzes (Kahoot-style), and role-differentiated hands-on AI sandboxes into a single browser tab.
@@ -22,7 +22,8 @@ Below is a complete, production-ready `project-plan.md` you can drop directly in
 2. **JSON-Driven Session Recording & Replay Dropdown:** Every training session—including its curriculum blocks, live poll aggregates, quiz leaderboards, participant lab submissions, and grounded AI outputs—is serialized into a portable `.json` snapshot. A global header dropdown allows team members to revisit any past session, inspect team outputs, or run the hands-on sandbox asynchronously.
 3. **Elastic Duration Scaling (10 Mins to 2 Hours):** Sessions are composed of modular JSON blocks (`POLL`, `QUIZ`, `CONCEPT`, `LAB_3_LENS`, `LIVE_SANDBOX`, `HOMEWORK`). A 15-minute knowledge exchange uses 4–5 core blocks, while a 2-hour workshop chains multiple deep-dive lab loops without changing a single line of platform code.
 4. **3-Lens Horizontal Pedagogy:** Eliminates hierarchical labels ("Easy / Medium / Hard") in favor of equal-status **Architectural Lenses** so non-coders, managers, and developers learn side-by-side with immediate, role-relevant takeaways.
-5. **BYOK & Proactive Dual-Grounded AI (`@google/genai`):** Supports Bring-Your-Own-Key (stored strictly in client `sessionStorage`) alongside pre-cached proactive datasets, utilizing Gemini 2.5 Flash with both **Google Maps Grounding** (`googleMaps`) and **Google Search Grounding** (`googleSearch`).
+5. **BYOK & Dual-Grounded AI (plain HTTP):** Calls the HKU Gemini `generateContent` endpoint with browser `fetch` (no Google SDK), the `google_search` and `googleMaps` tools, and a user-provided key held only in page memory. Offline demo data is clearly labeled and is not presented as current grounding.
+6. **Optional Field-Testing Map:** A toggleable Leaflet/OpenStreetMap view supports homework and field testing without another API key; it displays only restaurant coordinates returned with a matching Maps grounding result.
 
 ---
 
@@ -31,7 +32,7 @@ Below is a complete, production-ready `project-plan.md` you can drop directly in
 ### Tech Stack
 * **Frontend:** Vue 3 (Composition API), Vite, TypeScript, Tailwind CSS, Pinia (state sync), Socket.io-client.
 * **Backend:** Node.js, Fastify (or Express), Socket.io (real-time room/state broadcasting), TypeScript.
-* **AI SDK:** Official `@google/genai` SDK (`gemini-2.5-flash` with `googleMaps` + `googleSearch` tools).
+* **AI integration:** Native browser `fetch` to `https://apidev.hku.hk/vertexai-gemini/gemini-3.8-flash:generateContent` using the BYOK header and the `system_instruction`, `contents`, `generationConfig.thinkingConfig`, `google_search`, and `googleMaps` request fields. No Google SDK is required.
 * **Persistence:** Zero-database file-system storage (`/server/data/sessions/*.json`). Live state is held in memory and automatically flushed to a timestamped JSON file upon each step transition or session end.
 
 ### Repository Structure
@@ -42,7 +43,7 @@ pulsedeck-training/
 │   │   ├── components/
 │   │   │   ├── header/
 │   │   │   │   ├── SessionDropdown.vue     # Switch between Live & Archived JSON sessions
-│   │   │   │   └── ByokKeyDrawer.vue       # Client-side sessionStorage Gemini API key input
+│   │   │   │   └── ByokKeyDrawer.vue       # In-memory-only BYOK key input
 │   │   │   ├── blocks/
 │   │   │   │   ├── PollBlock.vue           # Menti-style live bar/word-cloud poll
 │   │   │   │   ├── QuizBlock.vue           # Kahoot-style timed quiz + leaderboard
@@ -56,10 +57,10 @@ pulsedeck-training/
 ├── server/                          # Node.js + TypeScript Backend
 │   ├── src/
 │   │   ├── services/
-│   │   │   ├── geminiGrounding.ts          # @google/genai Maps + Search payload service
+│   │   │   ├── geminiGrounding.ts          # Plain fetch + Maps/Search grounding parser
 │   │   │   └── sessionRecorder.ts          # Reads/Writes session snapshots to JSON files
 │   │   ├── scripts/
-│   │   │   └── proactiveGather.ts          # CLI script to pre-fetch & cache grounded HKU data
+│   │   │   └── proactiveGather.ts          # Optional maintenance script for demo data
 │   │   └── index.ts                        # HTTP + Socket.io server
 │   └── data/
 │       ├── sessions/                       # Saved & Replayable Session JSON files
@@ -81,7 +82,7 @@ In the top navigation bar, `<SessionDropdown />` queries `GET /api/sessions` to 
 2. **📁 Recorded Past Sessions (JSON Archives):** When a user selects a past session from the dropdown (e.g., *"2026-10-29: AI Lunch Rotator — Team Exchange #1"*), the frontend switches to **Replay & Self-Paced Mode**:
    * Users can freely click **Previous / Next Step** at their own pace.
    * All historical poll charts, quiz leaderboards, and colleague 3-Lens submissions from that day are rendered intact.
-   * Users can still interact with the **Live Sandbox / Homework tabs** (using pre-cached data or their own BYOK key) without overwriting the historical JSON record.
+   * Users can still interact with the **Live Sandbox / Homework tabs** (using clearly labeled demo data or their own BYOK key) without overwriting the historical JSON record.
 
 ### Unified Session JSON Schema (`TrainingSessionJSON`)
 Every session—whether a blank template or a completed recording—adheres to a single TypeScript contract:
@@ -169,7 +170,7 @@ To address the wide skill gap in the room (UI designers, user support, veteran m
    * **Focus:** Business constraints, parameter taxonomy (budget, walking radius, weather/slope constraints), and deciding which data points require **Google Maps** vs. **Google Search** verification to prevent hallucinations.
    * **Immediate Takeaway:** An AI Feature Scoping & Grounding Matrix usable for evaluating any departmental AI vendor or internal ticket.
 3. **Lens C: Geo-Payload Engineer *(Targeted at Junior Developers & Technical Peers)***
-   * **Focus:** Constructing the `@google/genai` TypeScript request, combining `googleMaps` and `googleSearch` tools, anchoring `retrievalConfig.latLng`, and parsing `groundingChunks` for UI attribution.
+   * **Focus:** Constructing the typed `generateContent` fetch request, combining `google_search` and `googleMaps` tools, and parsing grounding metadata for UI attribution.
    * **Immediate Takeaway:** Copy-pasteable TypeScript service code for multi-tool grounding.
 
 ---
@@ -178,11 +179,11 @@ To address the wide skill gap in the room (UI designers, user support, veteran m
 
 ### Module Overview
 * **Problem Statement:** Deciding where to eat lunch around HKU (Canteen vs. Sai Ying Pun vs. Kennedy Town) wastes 15 minutes daily. Naive AI wrappers fail because they hallucinate closed shops and repeat the same answer ("mode collapse").
-* **Architectural Solution:** Use Gemini (`gemini-2.5-flash`) with dual grounding (`googleMaps` + `googleSearch`) to curate a verified pool of 5 restaurants matching team filters, then use a deterministic client-side spinning wheel for true randomness.
+* **Architectural Solution:** Use the HKU `gemini-3.8-flash:generateContent` endpoint with Maps and Search grounding to curate five restaurant suggestions matching team filters, then use a deterministic client-side spinning wheel. Treat citations as verification starting points, not guarantees; label responses without citations as unverified.
 
-### Dual-Grounding Service Implementation (`server/src/services/geminiGrounding.ts`)
+### Dual-Grounding Service Implementation (`services/web/src/lib/gemini.ts`)
 ```typescript
-import { GoogleGenAI } from '@google/genai';
+const GEMINI_ENDPOINT = 'https://apidev.hku.hk/vertexai-gemini/gemini-3.8-flash:generateContent';
 
 export interface LunchQueryConfig {
   campusOrigin: 'MAIN_BUILDING' | 'CENTENNIAL' | 'SASSCON_RD';
@@ -199,55 +200,33 @@ const HKU_COORDINATES = {
 };
 
 export async function fetchGroundedLunchPool(apiKey: string, query: LunchQueryConfig) {
-  const ai = new GoogleGenAI({ apiKey });
   const coords = HKU_COORDINATES[query.campusOrigin];
-
-  const prompt = `
-    Find 5 distinct, currently operating restaurants near HKU (${query.campusOrigin}) matching:
-    - Budget: Under HK$${query.maxBudgetHKD}
-    - Max walk: ${query.maxWalkMins} minutes
-    - Route constraint: ${query.weatherRoute}
-    - Team Mood & Pitch Style: "${query.vibeInstruction}"
-
-    Grounding Instructions:
-    1. Use Google Maps to verify real operating status, rating, and proximity to the provided coordinates.
-    2. Use Google Search to cross-check local Hong Kong food reviews, signature lunch dishes, and price range.
-
-    Return ONLY a valid JSON array of 5 objects with keys:
-    "name", "cuisine", "priceHKD", "walkMins", "signatureDish", "pitch"
-  `;
-
-  const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
-    contents: prompt,
-    config: {
-      tools: [
-        { googleMaps: {} },
-        { googleSearch: {} }
-      ],
-      toolConfig: {
-        retrievalConfig: {
-          latLng: coords,
-          languageCode: 'en_HK',
-        },
-      },
-      temperature: 0.5,
-    },
+  const prompt = `Find five distinct currently operating restaurants near HKU ${query.campusOrigin} (${coords.latitude}, ${coords.longitude}). Budget: under HK$${query.maxBudgetHKD}; maximum walk: ${query.maxWalkMins} minutes; route: ${query.weatherRoute}; team vibe: "${query.vibeInstruction}". Use Maps to ground place and location details, and Search for menu and price context. Return only a JSON array with name, cuisine, priceHKD, walkMins, signatureDish, pitch, and optional coordinates {latitude, longitude}. Include coordinates only when exact values are provided by the Maps result; never estimate or invent details.`;
+  const response = await fetch(GEMINI_ENDPOINT, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
+    body: JSON.stringify({
+      system_instruction: { parts: [{ text: 'You are a careful HKU lunch research assistant. Follow the filters, ground claims in available sources, and do not invent facts.' }] },
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { thinkingConfig: { thinkingLevel: 'medium' } },
+      tools: [{ google_search: {} }, { googleMaps: {} }],
+    }),
+    credentials: 'omit',
+    cache: 'no-store',
   });
+  if (!response.ok) throw new Error(`GenerateContent request failed (${response.status}).`);
 
-  const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+  const result = await response.json();
+  const candidate = result.candidates?.[0];
+  const metadata = candidate?.groundingMetadata ?? candidate?.grounding_metadata ?? {};
+  const chunks = metadata.groundingChunks ?? metadata.grounding_chunks ?? [];
+  const rawJsonText = candidate?.content?.parts?.map((part: { text?: string }) => part.text ?? '').join('\n') ?? '';
 
   return {
-    rawJsonText: response.text,
-    searchQueries: response.candidates?.[0]?.groundingMetadata?.webSearchQueries || [],
-    mapSources: chunks.filter((c: any) => c.maps).map((c: any) => ({
-      title: c.maps.title,
-      uri: c.maps.uri,
-    })),
-    webSources: chunks.filter((c: any) => c.web).map((c: any) => ({
-      title: c.web.title,
-      uri: c.web.uri,
-    })),
+    rawJsonText,
+    searchQueries: metadata.webSearchQueries ?? metadata.web_search_queries ?? [],
+    mapSources: chunks.filter((chunk: any) => chunk.maps).map((chunk: any) => ({ title: chunk.maps.title, uri: chunk.maps.uri })),
+    webSources: chunks.filter((chunk: any) => chunk.web).map((chunk: any) => ({ title: chunk.web.title, uri: chunk.web.uri })),
   };
 }
 ```
@@ -258,12 +237,12 @@ export async function fetchGroundedLunchPool(apiKey: string, query: LunchQueryCo
    * *Concept:* Why "vibe coding" any viral app on the internet comes down to 3 layers (UX Prompt, Grounding Strategy, API Payload).
 2. **Block 2 (`03:00 - 06:00`) | `QUIZ` — Why Naive AI Wrappers Fail:**
    * *Q1:* Why does asking an LLM for a "random restaurant" return the same noodle shop 4 times? *(Mode collapse vs. deterministic wheel).*
-   * *Q2:* Why combine `googleMaps` AND `googleSearch` in the payload? *(Geospatial distance/hours vs. local HK menu/OpenRice buzz).*
+   * *Q2:* Why combine `googleMaps` AND `google_search` in the payload? *(Geospatial distance/hours vs. local HK menu/OpenRice buzz).*
 3. **Block 3 (`06:00 - 14:00`) | `LAB_3_LENS` — Co-Architecting the Team Rotator:**
    * Participants select their Lens on their device and discuss in 3-person triads:
      * **Lens A:** Crafts the mood preset (e.g., *"Post-deployment comfort carbs"*) and re-spin UX rule.
      * **Lens B:** Selects the top 3 HKU filters (budget slider, escalator/slope filter, seat turnover) and maps each to Maps vs. Search grounding.
-     * **Lens C:** Fills in the 3 missing keys in the `@google/genai` payload (`tools`, `retrievalConfig.latLng`, and `groundingChunks` extraction).
+     * **Lens C:** Fills in the `generateContent` request fields (`system_instruction`, `contents`, `generationConfig`, and grounding tools), then inspects returned grounding metadata.
 4. **Block 4 (`14:00 - 17:00`) | `SANDBOX_SPIN` — Live Wheel Spin & Grounding Audit:**
    * Presenter selects a triad's combined submission on screen $\rightarrow$ clicks **Fetch & Spin**.
    * The wheel spins across 5 grounded restaurants, lands on a winner, and displays clickable **Google Maps Pins** and **Google Search citations**.
@@ -278,16 +257,16 @@ export async function fetchGroundedLunchPool(apiKey: string, query: LunchQueryCo
 
 ### Phase 1: Proactive Data Gathering & JSON Schema Setup (2 Hours)
 * [ ] Initialize monorepo (`client` + `server`) with TypeScript interfaces for `TrainingSessionJSON`.
-* [ ] Build `server/src/scripts/proactiveGather.ts` using your Gemini API key to pre-fetch and save 5 common HKU lunch filter presets (including real `mapSources` and `webSources`) into `hku-restaurants-fallback.json`.
+* [ ] Add clearly labeled offline demo data for the HKU Lunch Rotator; do not present fictional suggestions as live-grounded results.
 * [ ] Author the initial `template-15min-lunch-gacha.json` file containing the 5 lesson blocks.
 
 ### Phase 2: Backend State Recorder & WebSocket Engine (2.5 Hours)
 * [ ] Implement `sessionRecorder.ts` to list all `.json` files in `/server/data/sessions/` and flush live state updates to disk automatically.
 * [ ] Set up `Socket.io` events (`join_session`, `advance_block`, `submit_poll`, `submit_quiz`, `submit_lab`).
-* [ ] Expose `POST /api/rotator/spin` supporting both live BYOK headers (`x-gemini-api-key`) and instant fallback to pre-cached HKU data if no key is provided or if campus Wi-Fi lags.
+* [ ] Expose a fallback-data endpoint for the demo dataset. Send live BYOK requests directly from the browser to the supplied `generateContent` endpoint; never forward or log the API key on the Lightfield server.
 
 ### Phase 3: Frontend Shell, Session Dropdown & Interactive Blocks (4 Hours)
-* [ ] Build the top bar with `<SessionDropdown />` (allowing instant toggling between the Live WebSocket session and archived `.json` sessions in Replay Mode) and `<ByokKeyDrawer />`.
+* [ ] Build the top bar with `<SessionDropdown />` (allowing instant toggling between the Live WebSocket session and archived `.json` sessions in Replay Mode) and an in-memory-only `<ByokKeyDrawer />`.
 * [ ] Build `<PollBlock />` (animated Tailwind horizontal progress bars) and `<QuizBlock />` (countdown timer + top-5 leaderboard).
 * [ ] Build `<ThreeLensLabBlock />` with role tabs (Experience Designer / Grounding Strategist / Payload Engineer) so every colleague sees a clean, tailored interactive task.
 * [ ] Build `<LunchRotatorWheel />` using CSS `conic-gradient` + smooth cubic-bezier rotation, paired with a Grounding Verification drawer showing Maps links and Search queries.
@@ -296,3 +275,7 @@ export async function fetchGroundedLunchPool(apiKey: string, query: LunchQueryCo
 * [ ] Simulate a full 18-minute session with 3 mobile browser tabs (testing Lens A, B, and C simultaneously) and verify that the completed session saves cleanly to `/server/data/sessions/2026-XX-XX-rehearsal.json`.
 * [ ] Test selecting the saved rehearsal from the `<SessionDropdown />` to verify that all polls, quiz scores, and wheel spins replay seamlessly without a login.
 ```
+
+## Current Implementation Addendum
+
+The live curriculum begins with 2–3 practical learning objectives and revisits them in the closing takeaway. Every activity offers optional guided steps, a hint, and a stretch challenge. The closing block collects anonymous Stars and Wishes feedback; an always-available live Q&A panel supports anonymous questions, participant upvotes, and presenter answer marking. Participants can switch between light and dark themes, with only the theme preference stored locally.

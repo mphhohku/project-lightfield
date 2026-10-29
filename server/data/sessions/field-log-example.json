@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "field-log-example",
+  "title": "Field Log #01 · Lunch Rotator Example",
+  "createdAt": "2026-10-29T05:40:00.000Z",
+  "updatedAt": "2026-10-29T05:43:00.000Z",
+  "durationMode": "15_MIN",
+  "status": "ARCHIVED",
+  "presenterName": "Lightfield Demo",
+  "currentBlockIndex": 4,
+  "blocks": [
+    { "id": "lunch-poll", "type": "POLL", "title": "The HKU Lunch Bottleneck", "durationMinutes": 3, "description": "What makes the team's lunch decision hardest?", "prompt": "What most slows down a team lunch decision?", "options": ["Budget", "Walking time", "Weather or route", "Choosing together"] },
+    { "id": "grounding-quiz", "type": "QUIZ", "title": "Why Naive AI Wrappers Fail", "durationMinutes": 3, "description": "Two quick questions about grounding and randomness.", "questions": [
+      { "prompt": "Why can asking an LLM for a random restaurant repeat the same suggestion?", "options": ["Language models are deterministic databases", "Generation can favor common answers; a separate wheel randomizes selection", "Maps only lists one restaurant"], "answerIndex": 1, "explanation": "Recommendation and random selection are separate jobs." },
+      { "prompt": "Why pair Maps and Search grounding?", "options": ["They provide identical information", "Maps helps with places and location; Search can surface web sources", "Search calculates the wheel angle"], "answerIndex": 1, "explanation": "Distinct grounding sources can help verify different facts." }
+    ] },
+    { "id": "concept-3-layers", "type": "CONCEPT", "title": "Three Layers of a Useful AI Feature", "durationMinutes": 1, "description": "Experience design, grounding strategy, and request payloads work together. A citation is evidence to inspect—not a guarantee that every detail is current." },
+    { "id": "lens-lab", "type": "LAB_3_LENS", "title": "Co-Architect the Team Rotator", "durationMinutes": 7, "description": "Choose one equal-status field lens and submit a concrete design note." },
+    { "id": "sandbox-spin", "type": "SANDBOX_SPIN", "title": "Field Test · Lunch Rotator", "durationMinutes": 3, "description": "Set team filters, fetch five grounded suggestions with your own key, or explore clearly labelled demo suggestions." },
+    { "id": "homework", "type": "HOMEWORK", "title": "Take the Field Test Further", "durationMinutes": 1, "description": "Revisit this Field Log, inspect the sources, and try a different filter or a new idea." }
+  ],
+  "recordedState": {
+    "participants": {
+      "c8fb6928-6bc2-4afc-9a84-b8c73d5824d3": { "alias": "Centennial Owl", "quizScore": 2, "joinedAt": "2026-10-29T05:40:12.000Z", "selectedLens": "GROUNDING" }
+    },
+    "pollResults": { "lunch-poll": { "Budget": 1, "Walking time": 0, "Weather or route": 0, "Choosing together": 0 } },
+    "pollVoters": { "lunch-poll": { "c8fb6928-6bc2-4afc-9a84-b8c73d5824d3": "Budget" } },
+    "quizResults": { "grounding-quiz": [{ "participantId": "c8fb6928-6bc2-4afc-9a84-b8c73d5824d3", "alias": "Centennial Owl", "score": 2, "timeMs": 18420, "completedAt": "2026-10-29T05:41:18.000Z" }] },
+    "labSubmissions": [{ "id": "demo-lens-note-1", "participantId": "c8fb6928-6bc2-4afc-9a84-b8c73d5824d3", "alias": "Centennial Owl", "lens": "GROUNDING", "timestamp": "2026-10-29T05:42:00.000Z", "response": "Treat walking time as an estimate and give people a way to inspect current route details." }],
+    "generatedArtifacts": [{
+      "id": "example-field-test-1", "timestamp": "2026-10-29T05:43:00.000Z", "triggeredByGroup": "HKU Lunch Rotator",
+      "filtersUsed": { "campusOrigin": "MAIN_BUILDING", "maxBudgetHKD": 120, "maxWalkMins": 30, "weatherRoute": "ANY", "vibeInstruction": "Curious colleagues looking for a relaxed, easy-to-share lunch." },
+      "restaurants": [
+        { "id": "demo-harbour-bowl", "name": "Harbour Bowl (Demo)", "cuisine": "Cantonese-style rice", "priceHKD": 62, "walkMins": 10, "signatureDish": "Roast vegetable and rice bowl", "pitch": "A sample quick-lunch option with a familiar comfort-food profile." },
+        { "id": "demo-ivy-noodles", "name": "Ivy Lane Noodles (Demo)", "cuisine": "Noodles", "priceHKD": 48, "walkMins": 12, "signatureDish": "Sesame mushroom noodles", "pitch": "A sample warm bowl for a relaxed team lunch." },
+        { "id": "demo-campus-canteen", "name": "Campus Canteen Plate (Demo)", "cuisine": "Hong Kong café-style", "priceHKD": 55, "walkMins": 5, "signatureDish": "Baked tomato rice", "pitch": "A sample close-to-campus choice for a shorter break." },
+        { "id": "demo-western-street", "name": "Western Street Bento (Demo)", "cuisine": "Japanese-inspired", "priceHKD": 78, "walkMins": 16, "signatureDish": "Seasonal tofu bento", "pitch": "A sample balanced set meal for a longer walk." },
+        { "id": "demo-garden-cafe", "name": "Garden Table Café (Demo)", "cuisine": "Vegetarian café", "priceHKD": 88, "walkMins": 18, "signatureDish": "Roasted vegetable toast", "pitch": "A sample lighter meal for teams seeking a quieter lunch." }
+      ],
+      "winningRestaurantId": "demo-campus-canteen", "mapSources": [], "webSources": [], "searchQueries": [], "sourceMode": "demo"
+    }]
+  }
+}

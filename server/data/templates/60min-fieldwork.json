@@ -1,0 +1,137 @@
+{
+  "id": "60min-fieldwork",
+  "title": "AI Fieldwork · Standard Exchange",
+  "durationMode": "60_MIN",
+  "blocks": [
+    {
+      "id": "opening-poll",
+      "type": "POLL",
+      "title": "Starting Point",
+      "durationMinutes": 5,
+      "description": "Share what would make an AI feature useful in your work.",
+      "prompt": "Which part of an AI feature needs the most attention?",
+      "options": [
+        "Experience",
+        "Grounding",
+        "Payload",
+        "Evaluation"
+      ],
+      "learningSupport": {
+        "guidedSteps": [
+          "Choose the response closest to your current experience.",
+          "Notice which constraints or perspectives are missing.",
+          "Use the group pattern to shape the next discussion."
+        ],
+        "hint": "There is no ideal answer; choose what best matches your team today.",
+        "stretchChallenge": "Name one piece of evidence that would change your answer."
+      }
+    },
+    {
+      "id": "grounding-quiz",
+      "type": "QUIZ",
+      "title": "Grounding Check",
+      "durationMinutes": 8,
+      "description": "Check your understanding of trustworthy AI interactions.",
+      "questions": [
+        {
+          "prompt": "What should a grounded answer show?",
+          "options": [
+            "A verifiable source",
+            "A guaranteed truth label",
+            "A hidden model prompt"
+          ],
+          "answerIndex": 0,
+          "explanation": "Sources help people inspect claims; they do not guarantee correctness."
+        },
+        {
+          "prompt": "Where should a user-provided API key live in this app?",
+          "options": [
+            "A session archive",
+            "Browser memory for the request",
+            "A Socket.IO event"
+          ],
+          "answerIndex": 1,
+          "explanation": "Keep BYOK volatile and out of persistence and realtime messages."
+        }
+      ],
+      "learningSupport": {
+        "guidedSteps": [
+          "Read the scenario and identify its main constraint.",
+          "Compare each option with the evidence available.",
+          "After answering, explain the reasoning to a partner."
+        ],
+        "hint": "Look for the choice that keeps uncertainty visible instead of hiding it.",
+        "stretchChallenge": "Write a counterexample that would make the chosen answer fail."
+      }
+    },
+    {
+      "id": "concept-grounding",
+      "type": "CONCEPT",
+      "title": "Design for Verifiability",
+      "durationMinutes": 7,
+      "description": "A resilient AI experience combines clear constraints, useful citations, fallbacks, and human review.",
+      "learningSupport": {
+        "guidedSteps": [
+          "Underline the idea that matters most to your work.",
+          "Connect it to a recent decision or workflow.",
+          "Write one question you would want to verify before acting."
+        ],
+        "hint": "Focus on the smallest useful change, not an idealized end state.",
+        "stretchChallenge": "Identify a trade-off this principle introduces and how you would monitor it."
+      }
+    },
+    {
+      "id": "lens-lab",
+      "type": "LAB_3_LENS",
+      "title": "3-Lens Design Lab",
+      "durationMinutes": 20,
+      "description": "Submit one practical contribution from the Experience, Grounding, or Payload lens.",
+      "learningSupport": {
+        "guidedSteps": [
+          "Experience: describe who needs what and where friction occurs.",
+          "Grounding: list the evidence, assumptions, and failure cases.",
+          "Payload: identify the minimum data needed and what must stay out."
+        ],
+        "hint": "Start with a specific moment in a real workflow; keep the response focused.",
+        "stretchChallenge": "Ask someone from another role to challenge one assumption in your design."
+      }
+    },
+    {
+      "id": "field-test",
+      "type": "SANDBOX_SPIN",
+      "title": "Field Testing Sandbox",
+      "durationMinutes": 15,
+      "description": "Try the HKU Lunch Rotator with grounded sources or demo data.",
+      "learningSupport": {
+        "guidedSteps": [
+          "Set constraints that reflect a real use case.",
+          "Inspect sources, coverage, and any missing evidence.",
+          "Decide whether the result is ready to test or needs a narrower claim."
+        ],
+        "hint": "Treat generated suggestions as hypotheses; confirm important details independently.",
+        "stretchChallenge": "Repeat the test with one changed constraint and compare what meaningfully changes."
+      }
+    },
+    {
+      "id": "homework",
+      "type": "HOMEWORK",
+      "title": "Field Notes",
+      "durationMinutes": 5,
+      "description": "Capture one experiment to try next and one risk to validate.",
+      "learningSupport": {
+        "guidedSteps": [
+          "Choose one objective you can apply in your work.",
+          "Write an action small enough to try this week.",
+          "Name who will notice the result and when you will review it."
+        ],
+        "hint": "A useful next step should fit into an existing workflow.",
+        "stretchChallenge": "Define a simple signal that would tell you to keep, adapt, or stop the experiment."
+      }
+    }
+  ],
+  "learningObjectives": [
+    "Frame a real work challenge as a testable need for a specific person or team.",
+    "Design an AI-assisted workflow that makes evidence and limitations visible.",
+    "Plan a small field test with a clear signal and a next review date."
+  ]
+}

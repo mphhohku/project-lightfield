@@ -1,0 +1,10 @@
+{
+  "notice": "Deterministic sample records for local exploration only. These are fictional demo suggestions, not live-verified businesses, prices, routes, hours, or citations. Verify details independently before travel.",
+  "restaurants": [
+    { "id": "demo-harbour-bowl", "name": "Harbour Bowl (Demo)", "cuisine": "Cantonese-style rice", "priceHKD": 62, "walkMins": 10, "signatureDish": "Roast vegetable and rice bowl", "pitch": "A sample quick-lunch option with a familiar comfort-food profile." },
+    { "id": "demo-ivy-noodles", "name": "Ivy Lane Noodles (Demo)", "cuisine": "Noodles", "priceHKD": 48, "walkMins": 12, "signatureDish": "Sesame mushroom noodles", "pitch": "A sample warm bowl for a relaxed team lunch." },
+    { "id": "demo-campus-canteen", "name": "Campus Canteen Plate (Demo)", "cuisine": "Hong Kong café-style", "priceHKD": 55, "walkMins": 5, "signatureDish": "Baked tomato rice", "pitch": "A sample close-to-campus choice for a shorter break." },
+    { "id": "demo-western-street", "name": "Western Street Bento (Demo)", "cuisine": "Japanese-inspired", "priceHKD": 78, "walkMins": 16, "signatureDish": "Seasonal tofu bento", "pitch": "A sample balanced set meal for a longer walk." },
+    { "id": "demo-garden-cafe", "name": "Garden Table Café (Demo)", "cuisine": "Vegetarian café", "priceHKD": 88, "walkMins": 18, "signatureDish": "Roasted vegetable toast", "pitch": "A sample lighter meal for teams seeking a quieter lunch." }
+  ]
+}

@@ -1,0 +1,11 @@
+node_modules/
+**/node_modules/
+services/web/dist/
+server/dist/
+server/data/sessions/*.json
+!server/data/sessions/field-log-example.json
+!server/data/sessions/.gitkeep
+.env
+.env.*
+!.env.example
+.DS_Store
